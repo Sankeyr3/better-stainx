@@ -10,21 +10,26 @@
     //     return h;
     // }
    
-    function defaultVariable(){
-        let default_h = Math.floor(Math.random()*360);
-        let default_l = Math.floor(Math.random()*(100-20)+20);
-        let default_s = Math.floor(Math.random()*100);
 
-        let mode_h = Math.floor(Math.random()*5);
-        let mode_l = Math.floor(Math.random()*3);
+
+
+
+    let default_h, default_l, default_s, mode_h, mode_l, mode_l_0, mode_s, mode_s_23;
+    function defaultVariable(){
+        default_h = Math.floor(Math.random()*360);
+        default_l = Math.floor(Math.random()*(100-20)+20);
+        default_s = Math.floor(Math.random()*100);
+
+        mode_h = Math.floor(Math.random()*5);
+        mode_l = Math.floor(Math.random()*3);
         // mode_l = 2;
 
-        let mode_l_0 = mode_l == 0 ? Math.floor(Math.random()*3) : null;
+        mode_l_0 = mode_l == 0 ? Math.floor(Math.random()*3) : null;
         // let mode_l_0 = 3;
         // mode_h = 2;
-        let mode_s = Math.floor(Math.random()*5);
+        mode_s = Math.floor(Math.random()*5);
         // let mode_s = 2;
-        let mode_s_23 = (mode_s === 3 || mode_s===2) ?  Math.floor(Math.random()*2) : null;
+        mode_s_23 = (mode_s === 3 || mode_s===2) ?  Math.floor(Math.random()*2) : null;
     }
     function hue(i,j){
         i = Math.abs(i-parseInt(dimensions/2));
@@ -170,10 +175,11 @@ let size = 30;
 let dimensions = 23;
 let canvasMode = 1;
 let c;
-function  generate(){
+document.write("<canvas id='mycanvas' style='width:"+(size*dimensions)+"px; height:"+(size*dimensions)+"px'></canvas>");
+
+function  generateImage(){
     if(canvasMode){
         
-        document.write("<canvas id='mycanvas' style='width:"+(size*dimensions)+"px; height:"+(size*dimensions)+"px'></canvas>");
         c = document.getElementById("mycanvas");
         c.width = c.height = size*dimensions;
 
@@ -201,12 +207,16 @@ function  generate(){
             }
         }
     }
-    document.write("<br><a id='download'>download</a>");
     let a = document.getElementById('download');
+    console.log("test")
     let filename = mode_h+"#"+mode_s+"_"+mode_s_23+"#"+mode_l+"_"+mode_l_0+"&"+default_h+"&"+default_s+"&"+default_l;
     filename = filename.split("_null").join("");
     a.innerText = filename;
     a.download = filename + ".png";
     a.href = c.toDataURL("image/png", 1.0)//.replace("image/png", "image/octet-stream");
 }
-generate();
+window.onload = generate;
+function generate(){
+    defaultVariable();
+    generateImage();
+}
