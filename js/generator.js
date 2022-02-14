@@ -9,13 +9,28 @@
     //     h = distance*100 + Math.floor(Math.random()*80);
     //     return h;
     // }
-    
-    let default_h = Math.floor(Math.random()*360);
-    let default_l = Math.floor(Math.random()*(100-20)+20);
-    let default_s = Math.floor(Math.random()*100);
+   
 
-    let mode_h = Math.floor(Math.random()*5);
-    // mode_h = 2;
+
+
+
+    let default_h, default_l, default_s, mode_h, mode_l, mode_l_0, mode_s, mode_s_23;
+    function defaultVariable(){
+        default_h = Math.floor(Math.random()*360);
+        default_l = Math.floor(Math.random()*(100-20)+20);
+        default_s = Math.floor(Math.random()*100);
+
+        mode_h = Math.floor(Math.random()*5);
+        mode_l = Math.floor(Math.random()*3);
+        // mode_l = 2;
+
+        mode_l_0 = mode_l == 0 ? Math.floor(Math.random()*3) : null;
+        // let mode_l_0 = 3;
+        // mode_h = 2;
+        mode_s = Math.floor(Math.random()*5);
+        // let mode_s = 2;
+        mode_s_23 = (mode_s === 3 || mode_s===2) ?  Math.floor(Math.random()*2) : null;
+    }
     function hue(i,j){
         i = Math.abs(i-parseInt(dimensions/2));
         j = Math.abs(j-parseInt(dimensions/2));
@@ -53,11 +68,7 @@
            
         return h;
     }
-    let mode_l = Math.floor(Math.random()*3);
-    // mode_l = 2;
-
-    let mode_l_0 = mode_l == 0 ? Math.floor(Math.random()*3) : null;
-    // let mode_l_0 = 3;
+    
     function lightness(i,j){
         i = Math.abs(i-parseInt(dimensions/2));
         j = Math.abs(j-parseInt(dimensions/2));
@@ -104,9 +115,7 @@
         return l;
         
     }
-    let mode_s = Math.floor(Math.random()*5);
-    // let mode_s = 2;
-    let mode_s_23 = (mode_s === 3 || mode_s===2) ?  Math.floor(Math.random()*2) : null;
+   
     function saturation(i,j){
         i = Math.abs(i-parseInt(dimensions/2));
         j = Math.abs(j-parseInt(dimensions/2));
@@ -166,40 +175,48 @@ let size = 30;
 let dimensions = 23;
 let canvasMode = 1;
 let c;
-if(canvasMode){
-    
-    document.write("<canvas id='mycanvas' style='width:"+(size*dimensions)+"px; height:"+(size*dimensions)+"px'></canvas>");
-    c = document.getElementById("mycanvas");
-    c.width = c.height = size*dimensions;
+document.write("<canvas id='mycanvas' style='width:"+(size*dimensions)+"px; height:"+(size*dimensions)+"px'></canvas>");
 
-    let ctx = c.getContext("2d");
-    for (let i = 0; i < dimensions; i++) {
-        for (let j = 0; j < dimensions; j++) {
-            ctx.fillStyle = hslToHex(hue(i,j), saturation(i,j), lightness(i,j));
-            ctx.beginPath();
-            ctx.rect(j*size, i*size, size, size); 
-            ctx.fill();
-        }   
-    }
-}else{
-     for(let i = 0; i < dimensions; i++){
-        for(let j = 0; j < dimensions; j++){
-            let div = document.createElement('div');
-            div.style.position = 'absolute';
-            div.style.height = size + 'px';
-            div.style.width = size+'px';
-            div.style.top = size*i+'px';
-            div.style.left = size*j+'px';
-           
-            div.style.background = 'hsl('+hue(i,j)+',+'+saturation(i,j)+'%,'+lightness(i,j)+'%)';
-            document.body.appendChild(div);
+function  generateImage(){
+    if(canvasMode){
+        
+        c = document.getElementById("mycanvas");
+        c.width = c.height = size*dimensions;
+
+        let ctx = c.getContext("2d");
+        for (let i = 0; i < dimensions; i++) {
+            for (let j = 0; j < dimensions; j++) {
+                ctx.fillStyle = hslToHex(hue(i,j), saturation(i,j), lightness(i,j));
+                ctx.beginPath();
+                ctx.rect(j*size, i*size, size, size); 
+                ctx.fill();
+            }   
+        }
+    }else{
+        for(let i = 0; i < dimensions; i++){
+            for(let j = 0; j < dimensions; j++){
+                let div = document.createElement('div');
+                div.style.position = 'absolute';
+                div.style.height = size + 'px';
+                div.style.width = size+'px';
+                div.style.top = size*i+'px';
+                div.style.left = size*j+'px';
+            
+                div.style.background = 'hsl('+hue(i,j)+',+'+saturation(i,j)+'%,'+lightness(i,j)+'%)';
+                document.body.appendChild(div);
+            }
         }
     }
+    let a = document.getElementById('download');
+    console.log("test")
+    let filename = mode_h+"#"+mode_s+"_"+mode_s_23+"#"+mode_l+"_"+mode_l_0+"&"+default_h+"&"+default_s+"&"+default_l;
+    filename = filename.split("_null").join("");
+    a.innerText = filename;
+    a.download = filename + ".png";
+    a.href = c.toDataURL("image/png", 1.0)//.replace("image/png", "image/octet-stream");
 }
-document.write("<br><a id='download'>download</a>");
-let a = document.getElementById('download');
-let filename = mode_h+"#"+mode_s+"_"+mode_s_23+"#"+mode_l+"_"+mode_l_0+"&"+default_h+"&"+default_s+"&"+default_l;
-filename = filename.split("_null").join("");
-a.innerText = filename;
-a.download = filename + ".png";
-a.href = c.toDataURL("image/png", 1.0)//.replace("image/png", "image/octet-stream");
+window.onload = generate;
+function generate(){
+    defaultVariable();
+    generateImage();
+}
